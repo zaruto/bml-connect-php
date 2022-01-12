@@ -20,7 +20,7 @@ $ curl -sS https://getcomposer.org/installer | php
 Next, install the latest bml-connect-php:
 
 ```
-$ php composer.phar require bankofmaldives/bml-connect-php
+$ composer require zaruto/bml-connect-php
 ```
 
 Finally, you need to require the library in your PHP application:
