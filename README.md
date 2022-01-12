@@ -20,7 +20,8 @@ $ curl -sS https://getcomposer.org/installer | php
 Next, install the latest bml-connect-php:
 
 ```
-$ composer require zaruto/bml-connect-php
+$ composer require zaruto/bml-connect-php dev-php-8-support
+
 ```
 
 Finally, you need to require the library in your PHP application:
