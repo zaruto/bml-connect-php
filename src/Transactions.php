@@ -12,7 +12,7 @@ class Transactions
     /**
      * @var Client
      */
-    private $client;
+    private Client $client;
 
     /**
      * Payments constructor.
@@ -27,7 +27,7 @@ class Transactions
      * @param array $json
      * @return mixed
      */
-    public function create(array $json)
+    public function create(array $json): mixed
     {
         $transaction = (new Transaction())->fromArray($json);
         $json['signature'] = (new Signature($transaction, $this->client->getApiKey()))->sign();
@@ -38,7 +38,7 @@ class Transactions
      * @param string $id
      * @return mixed
      */
-    public function get(string $id)
+    public function get(string $id): mixed
     {
         return $this->client->get(self::ENDPOINT.'/'.$id);
     }
@@ -47,7 +47,7 @@ class Transactions
      * @param array $params
      * @return mixed
      */
-    public function list(array $params)
+    public function list(array $params): mixed
     {
         return $this->client->get(self::ENDPOINT, $params);
     }

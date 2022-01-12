@@ -7,7 +7,7 @@ Using this PHP API Client you can interact with your Bank of Maldives Connect AP
 
 ## Installation
 
-Requires PHP 7.0 or higher
+Requires PHP 8.0 or higher
 
 The recommended way to install bml-connect-php is through [Composer](https://getcomposer.org):
 

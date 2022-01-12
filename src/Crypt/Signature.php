@@ -8,13 +8,13 @@ class Signature
     /**
      * @var Transaction
      */
-    private $transaction;
+    private Transaction $transaction;
 
 
     /**
      * @var string
      */
-    private $apiKey;
+    private string $apiKey;
 
     /**
      * Signature constructor.

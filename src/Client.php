@@ -3,7 +3,9 @@
 namespace BMLConnect;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 
 class Client
 {
@@ -14,39 +16,39 @@ class Client
     const BML_PRODUCTION_ENDPOINT = 'https://api.merchants.bankofmaldives.com.mv/public/';
 
     /**
-     * @var \GuzzleHttp\Client
+     * @var GuzzleClient
      */
-    private $httpClient;
+    private GuzzleClient $httpClient;
 
     /**
      * @var string
      */
-    private $apiKey;
+    private string $apiKey;
 
     /**
      * @var string
      */
-    private $appId;
+    private string $appId;
 
     /**
      * @var string
      */
-    private $mode;
+    private string $mode;
 
     /**
      * @var array
      */
-    private $clientOptions;
+    private array $clientOptions;
 
     /**
      * @var string
      */
-    private $baseUrl;
+    private string $baseUrl;
 
     /**
      * @var Transactions
      */
-    public $transactions;
+    public Transactions $transactions;
 
 
     /**
@@ -56,7 +58,7 @@ class Client
      * @param string $mode
      * @param array $clientOptions
      */
-    public function __construct(string $apiKey, string $appId, $mode = 'production', array $clientOptions = [])
+    public function __construct(string $apiKey, string $appId, string $mode = 'production', array $clientOptions = [])
     {
         $this->apiKey = $apiKey;
         $this->appId = $appId;
@@ -93,7 +95,7 @@ class Client
         $this->httpClient = new GuzzleClient(array_replace_recursive($this->clientOptions, $options));
     }
 
-    private function buildBaseUrl()
+    private function buildBaseUrl(): string
     {
         return $this->baseUrl;
     }
@@ -102,21 +104,19 @@ class Client
      * @param Response $response
      * @return mixed
      */
-    private function handleResponse(Response $response)
+    private function handleResponse(Response $response): mixed
     {
-        $stream = \GuzzleHttp\Psr7\stream_for($response->getBody());
-        $data = json_decode($stream);
-
-        return $data;
+        $stream = Utils::streamFor($response->getBody());
+        return json_decode($stream);
     }
 
     /**
      * @param string $endpoint
      * @param array $json
      * @return mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    public function post($endpoint, $json)
+    public function post(string $endpoint, array $json): mixed
     {
         $json['apiVersion'] = self::BML_API_VERSION;
         $json['appVersion'] = self::BML_APP_VERSION;
@@ -131,7 +131,7 @@ class Client
      * @param array $pagination
      * @return mixed
      */
-    public function get(string $endpoint, array $pagination = [])
+    public function get(string $endpoint, array $pagination = []): mixed
     {
         $response = $this->httpClient->request(
             'GET',
@@ -146,7 +146,7 @@ class Client
      * @param array $pagination
      * @return string
      */
-    private function applyPagination(string $url, array $pagination)
+    private function applyPagination(string $url, array $pagination): string
     {
         if (count($pagination)) {
             return $url.'?'.http_build_query($this->cleanPagination($pagination));
@@ -159,7 +159,7 @@ class Client
      * @param array $pagination
      * @return array
      */
-    private function cleanPagination(array $pagination)
+    private function cleanPagination(array $pagination): array
     {
         $allowed = [
             'page',
@@ -171,7 +171,7 @@ class Client
     /**
      * @return string
      */
-    public function getApiKey()
+    public function getApiKey(): string
     {
         return $this->apiKey;
     }

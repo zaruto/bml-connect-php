@@ -1,42 +1,44 @@
 <?php
 namespace BMLConnect\Model;
 
+use InvalidArgumentException;
+
 class Transaction
 {
     /**
      * @var int
      */
-    private $amount;
+    private int $amount;
 
     /**
      * @var string
      */
-    private $currency;
+    private string $currency;
 
     /**
      * @var string
      */
-    private $isPreAuthorization;
+    private string $isPreAuthorization;
 
     /**
      * @var
      */
-    private $provider;
+    private mixed $provider;
 
     /**
      * @var
      */
-    private $redirectUrl;
+    private mixed $redirectUrl;
 
     /**
      * @var
      */
-    private $localId;
+    private mixed $localId;
 
     /**
      * @return int
      */
-    public function getAmount()
+    public function getAmount(): int
     {
         return $this->amount;
     }
@@ -52,7 +54,7 @@ class Transaction
     /**
      * @return string
      */
-    public function getCurrency()
+    public function getCurrency(): string
     {
         return $this->currency;
     }
@@ -84,7 +86,7 @@ class Transaction
     /**
      * @return mixed
      */
-    public function getProvider()
+    public function getProvider(): mixed
     {
         return $this->provider;
     }
@@ -92,7 +94,7 @@ class Transaction
     /**
      * @param mixed $provider
      */
-    public function setProvider($provider)
+    public function setProvider(mixed $provider)
     {
         $this->provider = $provider;
     }
@@ -100,7 +102,7 @@ class Transaction
     /**
      * @return mixed
      */
-    public function getRedirectUrl()
+    public function getRedirectUrl(): mixed
     {
         return $this->redirectUrl;
     }
@@ -108,7 +110,7 @@ class Transaction
     /**
      * @param mixed $redirectUrl
      */
-    public function setRedirectUrl($redirectUrl)
+    public function setRedirectUrl(mixed $redirectUrl)
     {
         $this->redirectUrl = $redirectUrl;
     }
@@ -116,7 +118,7 @@ class Transaction
     /**
      * @return mixed
      */
-    public function getLocalId()
+    public function getLocalId(): mixed
     {
         return $this->localId;
     }
@@ -124,7 +126,7 @@ class Transaction
     /**
      * @param mixed $localId
      */
-    public function setLocalId($localId)
+    public function setLocalId(mixed $localId)
     {
         $this->localId = $localId;
     }
@@ -133,13 +135,13 @@ class Transaction
      * @param array $json
      * @return $this
      */
-    public function fromArray(array $json)
+    public function fromArray(array $json): static
     {
         if (array_key_exists('amount', $json) && array_key_exists('currency', $json)) {
             $this->amount = $json['amount'];
             $this->currency = $json['currency'];
         } else {
-            throw new \InvalidArgumentException('amount and currency are required to sign a transaction');
+            throw new InvalidArgumentException('amount and currency are required to sign a transaction');
         }
 
         if (array_key_exists('isPreAuthorization', $json)) {
