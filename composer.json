@@ -1,5 +1,5 @@
 {
-    "name": "bankofmaldives/bml-connect-php",
+    "name": "zaruto/bml-connect-php",
     "description": "PHP Bindings for the BML Connect API",
     "keywords": ["bml", "bankofmaldives", "pay", "alipay", "php", "api", "maldives", "card payments"],
     "type": "library",
