@@ -1,0 +1,338 @@
+# Instincts generated from https://github.com/zaruto/bml-connect-php
+# Generated: 2026-04-17T07:51:46.700Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: bml-connect-php-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/zaruto/bml-connect-php
+---
+
+# Bml Connect Php Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: feat
+
+## Evidence
+
+- 1 commits analyzed
+- Detected conventional commit pattern
+- Examples: feat!: migrate transactions sdk to BML Connect 2.0 and PHP 8.5
+
+---
+id: bml-connect-php-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/zaruto/bml-connect-php
+---
+
+# Bml Connect Php Commit Length
+
+## Action
+
+Write moderate-length commit messages (~62 characters)
+
+## Evidence
+
+- Average commit message length: 62 chars
+- Based on 1 commits
+
+---
+id: bml-connect-php-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/zaruto/bml-connect-php
+---
+
+# Bml Connect Php Naming Files
+
+## Action
+
+Use PascalCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: PascalCase
+
+---
+id: bml-connect-php-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/zaruto/bml-connect-php
+---
+
+# Bml Connect Php Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: bml-connect-php-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/zaruto/bml-connect-php
+---
+
+# Bml Connect Php Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: bml-connect-php-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/zaruto/bml-connect-php
+---
+
+# Bml Connect Php Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: bml-connect-php-instinct-file-naming
+trigger: "When creating a new file in the codebase"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct File Naming
+
+## Action
+
+Name the file using PascalCase (e.g., MyFile.php)
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.files
+
+---
+id: bml-connect-php-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Function Naming
+
+## Action
+
+Use camelCase for the function name (e.g., processTransaction)
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.functions
+
+---
+id: bml-connect-php-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Class Naming
+
+## Action
+
+Use PascalCase for the class name (e.g., TransactionModel)
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.classes
+
+---
+id: bml-connect-php-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Constant Naming
+
+## Action
+
+Use SCREAMING_SNAKE_CASE for the constant name (e.g., MAX_LIMIT)
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.constants
+
+---
+id: bml-connect-php-instinct-import-style
+trigger: "When importing modules or files"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Import Style
+
+## Action
+
+Use relative import paths
+
+## Evidence
+
+- Pattern in codeStyle.importStyle
+
+---
+id: bml-connect-php-instinct-export-style
+trigger: "When exporting modules or symbols"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in codeStyle.exportStyle
+
+---
+id: bml-connect-php-instinct-test-location
+trigger: "When adding or updating tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Test Location
+
+## Action
+
+Place test files in the separate 'test' folder at the root of the repository
+
+## Evidence
+
+- Pattern in architecture.folderStructure.testLocation
+
+---
+id: bml-connect-php-instinct-test-organization
+trigger: "When organizing test files"
+confidence: 0.7
+domain: testing
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Test Organization
+
+## Action
+
+Mirror the structure of the 'src' directory within the 'test' folder (e.g., test/Crypt for src/Crypt)
+
+## Evidence
+
+- Pattern in architecture.folderStructure.srcLayout
+- Pattern in architecture.folderStructure.testLocation
+
+---
+id: bml-connect-php-instinct-commit-format
+trigger: "When writing a commit message"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Commit Format
+
+## Action
+
+Use the Conventional Commits format with 'feat' as the prefix for new features (e.g., 'feat: add new payment gateway support')
+
+## Evidence
+
+- Seen in commit 'feat!: migrate transactions sdk to BML Connect 2.0 and PHP 8.5'
+- Pattern in commits.prefixes
+
+---
+id: bml-connect-php-instinct-commit-length
+trigger: "When writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Commit Length
+
+## Action
+
+Keep the commit message concise, around 62 characters on average
+
+## Evidence
+
+- Pattern in commits.averageLength
+
+---
+id: bml-connect-php-instinct-ci-workflow-location
+trigger: "When configuring CI workflows"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: zaruto/bml-connect-php
+---
+
+# Bml Connect Php Instinct Ci Workflow Location
+
+## Action
+
+Place workflow configuration files in the '.github/workflows' directory
+
+## Evidence
+
+- Pattern in architecture.configFiles
+
