@@ -1,8 +1,12 @@
+# DISCLAIMER
+The code provided for this service is a sample code. In the event of any direct or indirect losses due to use of this code, Bank of Maldives is not liable for damages. We advise all merchants to generate a unique code based on this sample code to avoid any possibility of loss that may arise in the future.
+
 # BMLConnectPHP
+> PHP API Client and bindings for the [Bank of Maldives Connect API](https://github.com/bankofmaldives/bml-connect)
 
-> PHP API client and bindings for the [Bank of Maldives Connect API](https://bankofmaldives.stoplight.io/docs/bml-connect/669ez9vcvc6an-getting-started-with-bml-connect)
 
-This release is aligned to **BML Connect 2.0** transaction APIs.
+Using this PHP API Client you can interact with your Bank of Maldives Connect API:
+- 💳 __Transactions__
 
 ## Installation
 
