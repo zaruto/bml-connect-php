@@ -1,119 +1,109 @@
 # BMLConnectPHP
 
-> PHP API Client and bindings for the [Bank of Maldives Connect API](https://github.com/bankofmaldives/bml-connect)
+> PHP API client and bindings for the [Bank of Maldives Connect API](https://bankofmaldives.stoplight.io/docs/bml-connect/669ez9vcvc6an-getting-started-with-bml-connect)
 
-Using this PHP API Client you can interact with your Bank of Maldives Connect API:
-- 💳 __Transactions__
+This release is aligned to **BML Connect 2.0** transaction APIs.
 
 ## Installation
 
-Requires PHP 8.0 or higher
+Requires **PHP 8.5+**.
 
-The recommended way to install bml-connect-php is through [Composer](https://getcomposer.org):
+Install with Composer:
 
-First, install Composer:
-
-```
-$ curl -sS https://getcomposer.org/installer | php
+```bash
+composer require zaruto/bml-connect-php
 ```
 
-Next, install the latest bml-connect-php:
-
-```
-$ composer require zaruto/bml-connect-php
-```
-
-Finally, you need to require the library in your PHP application:
+## Quick Start
 
 ```php
-require "vendor/autoload.php";
+use BMLConnect\Client;
+
+$client = new Client('apikey', 'appid'); // production
+// $client = new Client('apikey', 'appid', 'sandbox');
 ```
+
+## Transactions (V2)
+
+### Create transaction
+
+Uses `POST /public/v2/transactions`.
+
+```php
+use BMLConnect\Client;
+
+$client = new Client('apikey', 'appid');
+
+$payload = [
+    'redirectUrl' => 'https://merchant.example/orders/123',
+    'localId' => 'INV-123',
+    'customerReference' => 'Basket 392',
+    'order' => [
+        'shopId' => '60d34368bb850e00080dfe65',
+        'products' => [
+            [
+                'productId' => '60d344ec71b6b20008b20ced',
+                'numberOfItems' => 2,
+            ],
+        ],
+    ],
+];
+
+$transaction = $client->transactions->create($payload);
+header('Location: '.$transaction['url']);
+```
+
+### Get transaction
+
+Uses `GET /public/transactions/{transactionId}`.
+
+```php
+$transaction = $client->transactions->get('transaction-id');
+```
+
+### Update transaction
+
+Uses `PATCH /public/transactions/{transactionId}`.
+
+```php
+$updated = $client->transactions->update('transaction-id', [
+    'customerReference' => 'Updated reference',
+]);
+```
+
+### Share payment link via SMS
+
+Uses `POST /public/transactions/{transactionId}/send-sms`.
+
+```php
+$response = $client->transactions->sendSms('transaction-id', '9607770000');
+```
+
+### Share payment link via email
+
+Uses `POST /public/transactions/{transactionId}/send-email`.
+
+```php
+$single = $client->transactions->sendEmail('transaction-id', 'foo@example.com');
+$multiple = $client->transactions->sendEmail('transaction-id', ['foo@example.com', 'bar@example.com']);
+```
+
+## Breaking Changes in 2.0 SDK
+
+- `Transactions::create()` now forwards a BML v2 payload directly.
+- Legacy transaction signing is removed (no automatic `signature` generation).
+- Legacy automatic request metadata injection is removed (`apiVersion`, `appVersion`, `signMethod`).
+- `Transactions::list()` is removed.
+- New methods: `update()`, `sendSms()`, `sendEmail()`.
+- Responses are returned as associative arrays.
 
 ## Development
 
-- Run `composer test` and `composer phpcs` before creating a PR to detect any obvious issues.
-- Please create issues for this specific API Binding under the [issues](https://github.com/bankofmaldives/bml-connect-php/issues) section.
-- [Contact Bank of Maldives](https://dashboard.merchants.bankofmaldives.com.mv) directly for Bank of Maldives Connect API support.
-
-
-## Quick Start
-### BMLConnect\Client
-First get your `production` or `sandbox` API key from [Merchant Portal](https://dashboard.merchants.bankofmaldives.com.mv).
-
-If you want to get a `production` client:
-
-```php
-use BMLConnect\Client;
-
-$client = new Client('apikey', 'appid');
+```bash
+composer install
+composer test
 ```
-
-If you want to get a `sandbox` client:
-
-```php
-use BMLConnect\Client;
-
-$client = new Client('apikey', 'appid', 'sandbox');
-```
-
-If you want to pass additional [GuzzleHTTP](https://github.com/guzzle/guzzle) options:
-
-```php
-use BMLConnect\Client;
-
-$options = ['headers' => ['foo' => 'bar']];
-$client = new Client('apikey', 'appid', 'sandbox', $options);
-```
-
-## Available API Operations
-
-The following exposed API operations from the Bank of Maldives Connect API are available using the API Client.
-
-See below for more details about each resource.
-
-💳 __Transactions__
-
-Create a new transaction with or without a specific payment method.
-
-## Usage details
-
-### 💳 Transactions
-#### Create transaction with a specific payment method
-
-```php
-use BMLConnect\Client;
-
-$client = new Client('apikey', 'appid');
-
-$json = [
- "provider" => "alipay", // Payment method enabled for your merchant account such as bcmc, alipay, card
- "currency" => "MVR",
- "amount" => 1000, // 10.00 MVR
- "redirectUrl" => "https://foo.bar/order/123" // Optional redirect after payment completion
-];
-
-$transaction = $client->transactions->create($json);
-header('Location: '. $transaction["url"]); // Go to transaction payment page
-```
-
-#### Create transaction without a payment method that will redirect to the payment method selection screen
-
-```php
-use BMLConnect\Client;
-
-$client = new Client('apikey', 'appid');
-
-$json = [
- "currency" => "MVR",
- "amount" => 1000, // 10.00 MVR
- "redirectUrl" => "https://foo.bar/order/987" // Optional redirect after payment completion
-];
-
-$transaction = $client->transactions->create($json);
-header('Location: '. $transaction["url"]); // Go to payment method selection screen
-```
-
 
 ## About
 
-⭐ Sign up as a merchant at https://dashboard.merchants.bankofmaldives.com.mv and start receiving payments in seconds.
+Sign up as a merchant at [Bank of Maldives Merchant Portal](https://dashboard.merchants.bankofmaldives.com.mv).
