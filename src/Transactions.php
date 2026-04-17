@@ -2,12 +2,10 @@
 
 namespace BMLConnect;
 
-use BMLConnect\Crypt\Signature;
-use BMLConnect\Model\Transaction;
-
 class Transactions
 {
-    const ENDPOINT = 'transactions';
+    private const ENDPOINT = 'transactions';
+    private const CREATE_ENDPOINT = 'v2/transactions';
 
     /**
      * @var Client
@@ -24,14 +22,12 @@ class Transactions
     }
 
     /**
-     * @param array $json
+     * @param array<string, mixed> $payload
      * @return mixed
      */
-    public function create(array $json): mixed
+    public function create(array $payload): mixed
     {
-        $transaction = (new Transaction())->fromArray($json);
-        $json['signature'] = (new Signature($transaction, $this->client->getApiKey()))->sign();
-        return $this->client->post(self::ENDPOINT, $json);
+        return $this->client->post(self::CREATE_ENDPOINT, $payload);
     }
 
     /**
@@ -40,15 +36,36 @@ class Transactions
      */
     public function get(string $id): mixed
     {
-        return $this->client->get(self::ENDPOINT.'/'.$id);
+        return $this->client->get(self::ENDPOINT . '/' . $id);
     }
 
     /**
-     * @param array $params
+     * @param string $id
+     * @param array<string, mixed> $payload
      * @return mixed
      */
-    public function list(array $params): mixed
+    public function update(string $id, array $payload): mixed
     {
-        return $this->client->get(self::ENDPOINT, $params);
+        return $this->client->patch(self::ENDPOINT . '/' . $id, $payload);
+    }
+
+    /**
+     * @param string $id
+     * @param string $mobile
+     * @return mixed
+     */
+    public function sendSms(string $id, string $mobile): mixed
+    {
+        return $this->client->post(self::ENDPOINT . '/' . $id . '/send-sms', ['mobile' => $mobile]);
+    }
+
+    /**
+     * @param string $id
+     * @param string|array<int, string> $emails
+     * @return mixed
+     */
+    public function sendEmail(string $id, string|array $emails): mixed
+    {
+        return $this->client->post(self::ENDPOINT . '/' . $id . '/send-email', ['emails' => $emails]);
     }
 }

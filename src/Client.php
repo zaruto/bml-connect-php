@@ -4,16 +4,11 @@ namespace BMLConnect;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Utils;
 
 class Client
 {
-    const BML_API_VERSION = '2.0';
-    const BML_APP_VERSION = 'bml-connect-php';
-    const BML_SIGN_METHOD = 'sha1';
-    const BML_SANDBOX_ENDPOINT = 'https://api.uat.merchants.bankofmaldives.com.mv/public/';
-    const BML_PRODUCTION_ENDPOINT = 'https://api.merchants.bankofmaldives.com.mv/public/';
+    public const BML_SANDBOX_ENDPOINT = 'https://api.uat.merchants.bankofmaldives.com.mv/public/';
+    public const BML_PRODUCTION_ENDPOINT = 'https://api.merchants.bankofmaldives.com.mv/public/';
 
     /**
      * @var GuzzleClient
@@ -26,17 +21,7 @@ class Client
     private string $apiKey;
 
     /**
-     * @var string
-     */
-    private string $appId;
-
-    /**
-     * @var string
-     */
-    private string $mode;
-
-    /**
-     * @var array
+     * @var array<array-key, mixed>
      */
     private array $clientOptions;
 
@@ -54,17 +39,20 @@ class Client
     /**
      * Client constructor.
      * @param string $apiKey
-     * @param string $appId
+     * @param string $_appId
      * @param string $mode
-     * @param array $clientOptions
+     * @param array<array-key, mixed> $clientOptions
      */
-    public function __construct(string $apiKey, string $appId, string $mode = 'production', array $clientOptions = [])
+    public function __construct(string $apiKey, string $_appId, string $mode = 'production', array $clientOptions = [])
     {
         $this->apiKey = $apiKey;
-        $this->appId = $appId;
-        $this->mode = $mode;
+        $this->clientOptions = [
+            'headers' => [
+                'X-App-Id' => $_appId,
+            ],
+        ];
         $this->baseUrl = ($mode === 'production' ? self::BML_PRODUCTION_ENDPOINT : self::BML_SANDBOX_ENDPOINT);
-        $this->clientOptions = $clientOptions;
+        $this->clientOptions = array_replace_recursive($this->clientOptions, $clientOptions);
 
         $this->initiateHttpClient();
 
@@ -74,7 +62,7 @@ class Client
     /**
      * @param GuzzleClient $client
      */
-    public function setClient(GuzzleClient $client)
+    public function setClient(GuzzleClient $client): void
     {
         $this->httpClient = $client;
     }
@@ -82,13 +70,13 @@ class Client
     /**
      * Initiates the HttpClient with required headers
      */
-    private function initiateHttpClient()
+    private function initiateHttpClient(): void
     {
         $options = [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'Authorization' =>  $this->apiKey,
+                'Authorization' => $this->apiKey,
             ]
         ];
 
@@ -101,78 +89,67 @@ class Client
     }
 
     /**
-     * @param Response $response
+     * @param string $body
      * @return mixed
      */
-    private function handleResponse(Response $response): mixed
+    private function handleResponse(string $body): mixed
     {
-        $stream = Utils::streamFor($response->getBody());
-        return json_decode($stream);
+        if ($body === '') {
+            return [];
+        }
+
+        $decoded = json_decode($body, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $decoded;
+        }
+
+        return $body;
     }
 
     /**
      * @param string $endpoint
-     * @param array $json
+     * @param array<array-key, mixed> $json
      * @return mixed
      * @throws GuzzleException
      */
     public function post(string $endpoint, array $json): mixed
     {
-        $json['apiVersion'] = self::BML_API_VERSION;
-        $json['appVersion'] = self::BML_APP_VERSION;
-        $json['signMethod'] = self::BML_SIGN_METHOD;
-
-        $response = $this->httpClient->request('POST', $this->buildBaseUrl().$endpoint, ['json' => $json]);
-        return $this->handleResponse($response);
+        $response = $this->httpClient->request('POST', $this->buildBaseUrl() . $endpoint, ['json' => $json]);
+        return $this->handleResponse((string) $response->getBody());
     }
 
     /**
      * @param string $endpoint
-     * @param array $pagination
+     * @param array<array-key, mixed> $json
+     * @return mixed
+     * @throws GuzzleException
+     */
+    public function patch(string $endpoint, array $json): mixed
+    {
+        $response = $this->httpClient->request('PATCH', $this->buildBaseUrl() . $endpoint, ['json' => $json]);
+        return $this->handleResponse((string) $response->getBody());
+    }
+
+    /**
+     * @param string $endpoint
      * @return mixed
      */
-    public function get(string $endpoint, array $pagination = []): mixed
+    public function get(string $endpoint): mixed
     {
-        $response = $this->httpClient->request(
-            'GET',
-            $this->applyPagination($this->buildBaseUrl().$endpoint, $pagination)
-        );
-
-        return $this->handleResponse($response);
+        $response = $this->httpClient->request('GET', $this->buildBaseUrl() . $endpoint);
+        return $this->handleResponse((string) $response->getBody());
     }
 
     /**
-     * @param string $url
-     * @param array $pagination
-     * @return string
+     * @param string $endpoint
+     * @param array<array-key, mixed> $json
+     * @return mixed
+     * @throws GuzzleException
      */
-    private function applyPagination(string $url, array $pagination): string
+    public function delete(string $endpoint, array $json): mixed
     {
-        if (count($pagination)) {
-            return $url.'?'.http_build_query($this->cleanPagination($pagination));
-        }
-
-        return $url;
-    }
-
-    /**
-     * @param array $pagination
-     * @return array
-     */
-    private function cleanPagination(array $pagination): array
-    {
-        $allowed = [
-            'page',
-        ];
-
-        return array_intersect_key($pagination, array_flip($allowed));
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiKey(): string
-    {
-        return $this->apiKey;
+        $response = $this->httpClient->request('DELETE', $this->buildBaseUrl() . $endpoint, ['json' => $json]);
+        return $this->handleResponse((string) $response->getBody());
     }
 }
